@@ -15,7 +15,8 @@
 #include "i18n.h"
 #include "utility.inl"
 
-CScene::CScene(int index) : _max_column(pow(index, 2)), _cur_point({0, 0})
+CScene::CScene(int index)
+    : _max_column(pow(index, 2)), _cur_point({0, 0})
 {
   init();
 }
@@ -61,8 +62,7 @@ void CScene::printUnderline(int line_no) const
   {
     if ((colunm % 3) == 0 || line_no == -1 || (line_no + 1) % 3 == 0)
     {
-      std::cout << Color::Modifier(Color::BOLD, Color::BG_DEFAULT, Color::FG_RED)
-                << CORNER << Color::Modifier();
+      std::cout << Color::Modifier(Color::BOLD, Color::BG_DEFAULT, Color::FG_RED) << CORNER << Color::Modifier();
     }
     else
     {
@@ -71,17 +71,14 @@ void CScene::printUnderline(int line_no) const
     auto third_symbol = (is_curline && _cur_point.x == colunm) ? ARROW : LINE;
     if (line_no == -1 || (line_no + 1) % 3 == 0)
     {
-      std::cout << Color::Modifier(Color::BOLD, Color::BG_DEFAULT,
-                                   Color::FG_RED)
-                << LINE << third_symbol << LINE << Color::Modifier();
+      std::cout << Color::Modifier(Color::BOLD, Color::BG_DEFAULT, Color::FG_RED) << LINE << third_symbol << LINE << Color::Modifier();
     }
     else
     {
       std::cout << LINE << third_symbol << LINE;
     }
   }
-  std::cout << Color::Modifier(Color::BOLD, Color::BG_DEFAULT, Color::FG_RED)
-            << CORNER << Color::Modifier() << std::endl;
+  std::cout << Color::Modifier(Color::BOLD, Color::BG_DEFAULT, Color::FG_RED) << CORNER << Color::Modifier() << std::endl;
 }
 
 void CScene::init()
@@ -183,7 +180,8 @@ bool CScene::isComplete()
   {
     for (int col = 0; col < 9; ++col)
     {
-      if (!_row_block[row].isValid() || !_column_block[col].isValid() ||
+      if (!_row_block[row].isValid() ||
+          !_column_block[col].isValid() ||
           !_xy_block[row / 3][col / 3].isValid())
         return false;
     }
@@ -217,7 +215,8 @@ bool CScene::save(const char *filename)
   for (CCommand command : _vCommand)
   {
     point_t point = command.getPoint();
-    fs << point.x << ' ' << point.y << ' ' << command.getPreValue() << ' '
+    fs << point.x << ' ' << point.y << ' '
+       << command.getPreValue() << ' '
        << command.getCurValue() << std::endl;
   }
 
@@ -277,8 +276,7 @@ void CScene::play()
       }
       else
       {
-        _vCommand.push_back(
-            std::move(oCommand)); // XXX: move without move constructor
+        _vCommand.push_back(std::move(oCommand)); // XXX: move without move constructor
         show();
         continue;
       }
@@ -422,23 +420,17 @@ void CScene::generate()
       {
         for (int j = col / 3 * 3; j < col / 3 * 3 + 3; j++)
         {
-          able_unit.erase(
-              std::remove(able_unit.begin(), able_unit.end(), matrix[i][j]),
-              able_unit.end());
+          able_unit.erase(std::remove(able_unit.begin(), able_unit.end(), matrix[i][j]), able_unit.end());
         }
       }
       // 行
       for (int i = 0; i < 9; i++)
         if (matrix[row][i] != 0)
-          able_unit.erase(
-              std::remove(able_unit.begin(), able_unit.end(), matrix[row][i]),
-              able_unit.end());
+          able_unit.erase(std::remove(able_unit.begin(), able_unit.end(), matrix[row][i]), able_unit.end());
       // 列
       for (int i = 0; i < 9; i++)
         if (matrix[i][col] != 0)
-          able_unit.erase(
-              std::remove(able_unit.begin(), able_unit.end(), matrix[i][col]),
-              able_unit.end());
+          able_unit.erase(std::remove(able_unit.begin(), able_unit.end(), matrix[i][col]), able_unit.end());
       available_num[key] = able_unit;
     }
     else
