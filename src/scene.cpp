@@ -396,24 +396,33 @@ void CScene::generate()
             }
     }
 
-    // 统计空格数量
+    // 统计零元素的位置
     std::vector<std::tuple<int, int>> box_list;
     for (int i = 0; i < 9; i++)
         for (int j = 0; j < 9; j++)
             if (matrix[i][j] == 0)
                 box_list.push_back(std::make_tuple(i, j));
 
-    // 逐个填充空格
+    // 定义一个映射，用于存储每个空格位置对应的可用数字列表
     std::map<std::string, std::vector<int>> available_num{};
+    // 记录已填充的空格数量
     int full_num = 0;
+    // 记录需要填充的空格总数
     int empty_num = box_list.size();
+    // 当已填充的空格数量小于需要填充的空格总数时，继续循环
     while (full_num < empty_num)
     {
+        // 获取当前要填充的空格位置
         std::tuple<int, int> position = box_list[full_num];
         int row = std::get<0>(position);
         int col = std::get<1>(position);
+
+        // 用于存储当前空格的可用数字列表
         std::vector<int> able_unit;
+        // 生成当前空格位置的唯一键
         std::string key = std::to_string(row) + "x" + std::to_string(col);
+        // 如果没找到，则计算当前空格的可用数字列表
+        // 规则：每一行，每一列，同一个宫里面的元素不能用
         if (available_num.find(key) == available_num.end())
         {
             // 九宫格
@@ -425,14 +434,17 @@ void CScene::generate()
                     able_unit.erase(std::remove(able_unit.begin(), able_unit.end(), matrix[i][j]), able_unit.end());
                 }
             }
+
             // 行
             for (int i = 0; i < 9; i++)
                 if (matrix[row][i] != 0)
                     able_unit.erase(std::remove(able_unit.begin(), able_unit.end(), matrix[row][i]), able_unit.end());
+
             // 列
             for (int i = 0; i < 9; i++)
                 if (matrix[i][col] != 0)
                     able_unit.erase(std::remove(able_unit.begin(), able_unit.end(), matrix[i][col]), able_unit.end());
+
             available_num[key] = able_unit;
         }
         else
@@ -440,7 +452,6 @@ void CScene::generate()
             able_unit = available_num[key];
         }
 
-        // 如果没有可用的数字，则回溯
         if (available_num[key].size() <= 0)
         {
             full_num -= 1;
