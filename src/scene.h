@@ -7,45 +7,70 @@
 #include "block.h"
 #include "command.h"
 
-//数独场景类
+// 数独场景类
 class CScene
 {
-  public:
-    CScene(int index = 3);
-    virtual ~CScene();
+public:
+  // 构造函数，初始化场景的列数和当前点
+  CScene(int index = 3);
+  // 析构函数，释放资源
+  virtual ~CScene();
 
-    void generate();
-    void show() const;
+  // 生成数独谜题
+  void generate();
+  // 显示数独场景
+  void show() const;
 
-    bool setCurValue(const int nCurValue, int& nLastValue);
-    bool setPointValue(const point_t&, const int);
-    point_t getCurPoint();
+  // 设置当前点的值
+  bool setCurValue(const int nCurValue, int &nLastValue);
+  // 设置指定点的值
+  bool setPointValue(const point_t &, const int);
+  // 获取当前点
+  point_t getCurPoint();
 
-    void eraseRandomGrids(const int count);
-    bool isComplete();
+  // 随机擦除指定数量的格子
+  void eraseRandomGrids(const int count);
+  // 检查数独是否完成
+  bool isComplete();
 
-    void play();
-    bool save(const char *filename);
-    bool load(const char *filename);
+  // 开始游戏
+  void play();
+  // 保存数独场景到文件
+  bool save(const char *filename);
+  // 从文件加载数独场景
+  bool load(const char *filename);
 
-    void setMode(KeyMode mode);
-
-  private:
-    void init(); // 将每个格子的指针放到block里面
-    void setValue(const int);
-    void setValue(const point_t &, const int);
-    void printUnderline(int line_no = -1) const;
+  // 设置操作模式
+  void setMode(KeyMode mode);
 
 private:
-    KeyMap *keyMap{};
-    int _max_column;
-    point_t _cur_point;
-    CBlock _column_block[9];
-    CBlock _row_block[9];
-    CBlock _xy_block[3][3];
-    point_value_t _map[81];
+  // 初始化场景，将每个格子的指针放到 block 里面
+  void init();
+  // 设置当前点的值
+  void setValue(const int);
+  // 设置指定点的值
+  void setValue(const point_t &, const int);
+  // 打印下划线
+  void printUnderline(int line_no = -1) const;
 
-    std::vector<CCommand> _vCommand;
+private:
+  // 键映射指针
+  KeyMap *keyMap{};
+  // 场景的最大列数
+  int _max_column;
+  // 当前点
+  point_t _cur_point;
+  // 列 block 数组
+  CBlock _column_block[9];
+  // 行 block 数组
+  CBlock _row_block[9];
+  // 九宫格 block 数组
+  CBlock _xy_block[3][3];
+  // 数独格子数组
+  point_value_t _map[81];
+
+  // 命令向量，用于记录操作历史
+  std::vector<CCommand> _vCommand;
 };
 
 #endif
